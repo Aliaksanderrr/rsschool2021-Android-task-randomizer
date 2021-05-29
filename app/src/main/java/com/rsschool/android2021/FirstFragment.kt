@@ -1,23 +1,40 @@
 package com.rsschool.android2021
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import java.lang.RuntimeException
 
 class FirstFragment : Fragment() {
 
+    interface ClickButton {
+        fun onFirstFragmentButtonClick(min: Int?, max: Int?)
+    }
+
     private var generateButton: Button? = null
     private var previousResult: TextView? = null
+    private var minEditText: EditText? = view?.findViewById(R.id.min_value)
+    private var maxEditText: EditText? = view?.findViewById(R.id.max_value)
+    private var listener: ClickButton? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        if(context is ClickButton){
+            listener = context as ClickButton
+        } else {
+            throw RuntimeException(context.toString()
+                    + " must implement ItemClickEventListener")
+        }
         return inflater.inflate(R.layout.fragment_first, container, false)
     }
 
@@ -29,11 +46,8 @@ class FirstFragment : Fragment() {
         val result = arguments?.getInt(PREVIOUS_RESULT_KEY)
         previousResult?.text = "Previous result: ${result.toString()}"
 
-        // TODO: val min = ...
-        // TODO: val max = ...
-
         generateButton?.setOnClickListener {
-            // TODO: send min and max to the SecondFragment
+            listener?.onFirstFragmentButtonClick(minEditText?.text.toString().toIntOrNull(),maxEditText?.text.toString().toIntOrNull())
         }
     }
 

@@ -8,7 +8,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 
-class SecondFragment : Fragment() {
+class SecondFragment : Fragment(){
 
     private var backButton: Button? = null
     private var result: TextView? = null
