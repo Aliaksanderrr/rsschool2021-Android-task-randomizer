@@ -8,7 +8,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-public class MainActivity extends AppCompatActivity implements FirstFragment.ClickButton  {
+import org.jetbrains.annotations.NotNull;
+
+public class MainActivity extends AppCompatActivity implements FirstFragment.ClickGenerateButton, SecondFragment.ClickBackButton  {
     private static int previousNumber = 0;
     private static int previousMax = 0;
     private static int previousMin = 0;
@@ -41,10 +43,21 @@ public class MainActivity extends AppCompatActivity implements FirstFragment.Cli
     }
 
     @Override
-    public void onFirstFragmentButtonClick(Integer min, Integer max) {
-       /* previousMin = min;
-        previousMax = max;*/
-        Toast.makeText(this, "min " + min + ",max " + max, Toast.LENGTH_LONG).show();
-        openSecondFragment(min.intValue(), max.intValue());
+    public void onFirstFragmentButtonClick(int min, int max) {
+        previousMin = min;
+        previousMax = max;
+        openSecondFragment(min, max);
     }
+
+    @Override
+    public void onFirstFragmentExceptionClick(@NotNull String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onSecondFragmentButtonClick(int number) {
+        previousNumber = number;
+        openFirstFragment(number);
+    }
+
 }

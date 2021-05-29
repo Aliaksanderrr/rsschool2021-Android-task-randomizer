@@ -1,39 +1,37 @@
 package com.rsschool.android2021
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import java.lang.RuntimeException
 
 class FirstFragment : Fragment() {
 
-    interface ClickButton {
-        fun onFirstFragmentButtonClick(min: Int?, max: Int?)
+    interface ClickGenerateButton {
+        fun onFirstFragmentButtonClick(min: Int, max: Int)
+        fun onFirstFragmentExceptionClick(message: String)
     }
 
     private var generateButton: Button? = null
     private var previousResult: TextView? = null
     private var minEditText: TextView? = null
     private var maxEditText: TextView? = null
-    private var listener: ClickButton? = null
+    private var listener: ClickGenerateButton? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        if(context is ClickButton){
-            listener = context as ClickButton
+        if(context is ClickGenerateButton){
+            listener = context as ClickGenerateButton
         } else {
             throw RuntimeException(context.toString()
-                    + " must implement ItemClickEventListener")
+                    + " must implement ClickGenerateButton")
         }
         return inflater.inflate(R.layout.fragment_first, container, false)
     }
@@ -50,7 +48,34 @@ class FirstFragment : Fragment() {
         maxEditText = view.findViewById(R.id.max_value)
 
         generateButton?.setOnClickListener {
-            listener?.onFirstFragmentButtonClick(minEditText?.text.toString().toIntOrNull(),maxEditText?.text.toString().toIntOrNull())
+            checkInputData()
+        }
+    }
+
+    private fun checkInputData(){
+        var message: String? = null
+        var minInt: Int = 0
+        var maxInt: Int = 0
+        if (minEditText?.text.isNullOrEmpty()){
+            message = "no min value"
+        } else if (maxEditText?.text.isNullOrEmpty()){
+            message = "no max value"
+        } else {
+            try {
+                minInt = minEditText?.text.toString().toInt()
+                maxInt = maxEditText?.text.toString().toInt()
+            } catch (exc: Exception) {
+                message = "invalid data"
+            }
+            if (maxInt < minInt){
+                message = "the max value must be greater than the min"
+            }
+        }
+
+        if (message != null){
+            listener?.onFirstFragmentExceptionClick(message)
+        } else {
+            listener?.onFirstFragmentButtonClick(minInt, maxInt)
         }
     }
 
