@@ -20,8 +20,8 @@ class FirstFragment : Fragment() {
 
     private var generateButton: Button? = null
     private var previousResult: TextView? = null
-    private var minEditText: EditText? = view?.findViewById(R.id.min_value)
-    private var maxEditText: EditText? = view?.findViewById(R.id.max_value)
+    private var minEditText: TextView? = null
+    private var maxEditText: TextView? = null
     private var listener: ClickButton? = null
 
     override fun onCreateView(
@@ -45,6 +45,9 @@ class FirstFragment : Fragment() {
 
         val result = arguments?.getInt(PREVIOUS_RESULT_KEY)
         previousResult?.text = "Previous result: ${result.toString()}"
+
+        minEditText = view.findViewById(R.id.min_value)
+        maxEditText = view.findViewById(R.id.max_value)
 
         generateButton?.setOnClickListener {
             listener?.onFirstFragmentButtonClick(minEditText?.text.toString().toIntOrNull(),maxEditText?.text.toString().toIntOrNull())

@@ -34,7 +34,10 @@ public class MainActivity extends AppCompatActivity implements FirstFragment.Cli
     }
 
     private void openSecondFragment(int min, int max) {
-        // TODO: implement it
+        final Fragment secondFragment = SecondFragment.newInstance(min, max);
+        final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container, secondFragment);
+        transaction.commit();
     }
 
     @Override
@@ -42,5 +45,6 @@ public class MainActivity extends AppCompatActivity implements FirstFragment.Cli
        /* previousMin = min;
         previousMax = max;*/
         Toast.makeText(this, "min " + min + ",max " + max, Toast.LENGTH_LONG).show();
+        openSecondFragment(min.intValue(), max.intValue());
     }
 }
