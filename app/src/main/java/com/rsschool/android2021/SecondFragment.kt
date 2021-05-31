@@ -13,7 +13,8 @@ import kotlin.random.Random
 class SecondFragment : Fragment(){
 
     interface ClickBackButton {
-        fun onSecondFragmentButtonClick(number: Int)
+        fun onSecondFragmentButtonClick()
+        fun previousGenerated(number: Int)
     }
 
     private var backButton: Button? = null
@@ -43,10 +44,11 @@ class SecondFragment : Fragment(){
         val max = arguments?.getInt(MAX_VALUE_KEY) ?: 0
 
         var randomNumber = generate(min, max)
+        listener?.previousGenerated(randomNumber)
         result?.text = randomNumber.toString()
 
         backButton?.setOnClickListener {
-            listener?.onSecondFragmentButtonClick(randomNumber)
+            listener?.onSecondFragmentButtonClick()
         }
     }
 

@@ -11,9 +11,14 @@ import androidx.fragment.app.FragmentTransaction;
 import org.jetbrains.annotations.NotNull;
 
 public class MainActivity extends AppCompatActivity implements FirstFragment.ClickGenerateButton, SecondFragment.ClickBackButton  {
+    private FragmentType actualFragment;
     private static int previousNumber = 0;
     private static int previousMax = 0;
     private static int previousMin = 0;
+
+    private enum FragmentType {
+        FIRST_FRAGMENT, SECOND_FRAGMENT;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,10 +33,20 @@ public class MainActivity extends AppCompatActivity implements FirstFragment.Cli
         openFirstFragment(previousNumber);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (actualFragment == FragmentType.SECOND_FRAGMENT ){
+            openFirstFragment(previousNumber);
+        } else{
+            super.onBackPressed();
+        }
+    }
+
     private void openFirstFragment(int previousNumber) {
         final Fragment firstFragment = FirstFragment.newInstance(previousNumber);
         final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, firstFragment);
+        actualFragment = FragmentType.FIRST_FRAGMENT;
         transaction.commit();
     }
 
@@ -39,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements FirstFragment.Cli
         final Fragment secondFragment = SecondFragment.newInstance(min, max);
         final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, secondFragment);
+        actualFragment = FragmentType.SECOND_FRAGMENT;
         transaction.commit();
     }
 
@@ -55,9 +71,13 @@ public class MainActivity extends AppCompatActivity implements FirstFragment.Cli
     }
 
     @Override
-    public void onSecondFragmentButtonClick(int number) {
+    public void onSecondFragmentButtonClick() {
+        openFirstFragment(previousNumber);
+    }
+
+    @Override
+    public void previousGenerated(int number){
         previousNumber = number;
-        openFirstFragment(number);
     }
 
 }
